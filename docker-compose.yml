@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: lab8-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: taskdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  app:
+    build: .
+    image: mahmoudalyosify/lab8-app:latest
+    container_name: lab8-app-container
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_HOST=db
+      - DB_NAME=taskdb
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  pgdata:
