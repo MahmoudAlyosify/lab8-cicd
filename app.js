@@ -17,6 +17,8 @@ app.get('/tasks', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM tasks');
     const tasks = result.rows;
+    tasks.push({ id: 7, name: 'Tea', status: 'pending' }); // السطر الجديد
+    const grouped = Object.groupBy(tasks, task => task.status);
     const grouped = Object.groupBy(tasks, task => task.status);
     res.json(grouped);
   } catch (err) {
